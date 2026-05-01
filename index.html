@@ -2,27 +2,97 @@
 
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <title>Oson TTS</title>
+<meta charset="UTF-8">
+<title>Ovoz Studiyasi</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 400px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 10px;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.play {
+  background: black;
+  color: white;
+}
+
+.stop {
+  background: red;
+  color: white;
+}
+</style>
+
 </head>
+
 <body>
 
-<h2>🎤 Matnni ovozga aylantirish</h2>
+<div class="container">
+  <h2>🎤 Ovoz Studiyasi</h2>
 
-<textarea id="text" rows="5" cols="40" placeholder="Matn yozing..."></textarea>
+<select id="voice"></select>
 
-<br><br>
+  <textarea id="text" placeholder="Matn kiriting..."></textarea>
 
-<button onclick="gapir()">▶ O‘qib ber</button> <button onclick="toxta()">■ To‘xtat</button>
+  <br>
+
+<button class="play" onclick="gapir()">▶ O‘qib ber</button> <button class="stop" onclick="toxta()">■ To‘xtat</button>
+
+</div>
 
 <script>
+let voices = [];
+
+function loadVoices() {
+  voices = speechSynthesis.getVoices();
+  let select = document.getElementById("voice");
+
+  select.innerHTML = "";
+
+  voices.forEach((voice, i) => {
+    let option = document.createElement("option");
+    option.value = i;
+    option.text = voice.name + " (" + voice.lang + ")";
+    select.appendChild(option);
+  });
+}
+
+speechSynthesis.onvoiceschanged = loadVoices;
+
 function gapir() {
-  let matn = document.getElementById("text").value;
+  let text = document.getElementById("text").value;
+  let voiceIndex = document.getElementById("voice").value;
 
-  let ovoz = new SpeechSynthesisUtterance(matn);
-  ovoz.lang = "uz-UZ";
+  let speech = new SpeechSynthesisUtterance(text);
+  speech.voice = voices[voiceIndex];
 
-  speechSynthesis.speak(ovoz);
+  speechSynthesis.speak(speech);
 }
 
 function toxta() {
