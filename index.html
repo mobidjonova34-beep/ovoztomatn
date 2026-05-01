@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Ovoz Studiyasi</title>
+<title>Ovoz Studiyasi - Azure TTS</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -21,68 +21,65 @@ body {
   box-shadow: 0 4px 24px rgba(83,74,183,0.10);
 }
 .header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: flex; align-items: center; gap: 10px;
   margin-bottom: 1.5rem;
 }
 .mic-circle {
   width: 38px; height: 38px;
-  background: #EEEDFE;
-  border-radius: 50%;
+  background: #EEEDFE; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
 }
 h2 { font-size: 18px; font-weight: 600; color: #2d2b55; }
 
 .lang-tabs {
   display: flex; gap: 6px;
-  background: #f4f3ff;
-  border-radius: 10px;
-  padding: 4px;
-  margin-bottom: 1rem;
+  background: #f4f3ff; border-radius: 10px;
+  padding: 4px; margin-bottom: 1rem;
 }
 .lang-tab {
   flex: 1; padding: 8px 0;
   border: none; border-radius: 7px;
-  background: transparent;
-  font-size: 13px; color: #888;
+  background: transparent; font-size: 13px; color: #888;
   cursor: pointer; transition: all 0.15s;
 }
 .lang-tab.active {
-  background: #fff;
-  color: #534AB7;
-  font-weight: 600;
+  background: #fff; color: #534AB7; font-weight: 600;
   box-shadow: 0 1px 4px rgba(83,74,183,0.12);
 }
 
 .gender-row { display: flex; gap: 8px; margin-bottom: 1rem; }
 .gender-btn {
   flex: 1; padding: 10px;
-  border: 1.5px solid #e8e6f8;
-  border-radius: 10px;
-  background: #fff;
-  font-size: 13px; color: #888;
+  border: 1.5px solid #e8e6f8; border-radius: 10px;
+  background: #fff; font-size: 13px; color: #888;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   transition: all 0.15s;
 }
 .gender-btn.active {
-  border-color: #534AB7;
-  background: #EEEDFE;
-  color: #534AB7;
-  font-weight: 600;
+  border-color: #534AB7; background: #EEEDFE;
+  color: #534AB7; font-weight: 600;
 }
+
+.api-box {
+  background: #faf9ff; border: 1.5px solid #e8e6f8;
+  border-radius: 10px; padding: 12px; margin-bottom: 1rem;
+}
+.api-box label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
+.api-box input {
+  width: 100%; border: 1px solid #e0ddf5; border-radius: 7px;
+  padding: 7px 10px; font-size: 13px; color: #333;
+  background: #fff; outline: none; margin-bottom: 6px;
+}
+.api-box input:last-child { margin-bottom: 0; }
 
 .textarea-wrap { position: relative; margin-bottom: 1rem; }
 textarea {
   width: 100%; height: 120px;
-  padding: 12px 14px;
-  border: 1.5px solid #e8e6f8;
-  border-radius: 10px;
-  background: #faf9ff;
-  font-size: 14px; color: #333;
-  resize: none; font-family: inherit;
-  outline: none; transition: border-color 0.15s;
+  padding: 12px 14px; border: 1.5px solid #e8e6f8;
+  border-radius: 10px; background: #faf9ff;
+  font-size: 14px; color: #333; resize: none;
+  font-family: inherit; outline: none; transition: border-color 0.15s;
   line-height: 1.6;
 }
 textarea:focus { border-color: #7F77DD; background: #fff; }
@@ -91,44 +88,26 @@ textarea:focus { border-color: #7F77DD; background: #fff; }
   font-size: 11px; color: #bbb;
 }
 
-.voice-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 12px;
-  background: #faf9ff;
-  border: 1.5px solid #e8e6f8;
-  border-radius: 10px;
-  margin-bottom: 1.25rem;
-}
-.voice-label { font-size: 12px; color: #888; white-space: nowrap; }
-select {
-  flex: 1; border: none; background: transparent;
-  font-size: 13px; color: #333; outline: none; cursor: pointer;
-}
-
 .action-row { display: flex; gap: 8px; }
 .btn-play {
-  flex: 1; padding: 13px;
-  border: none; border-radius: 10px;
+  flex: 1; padding: 13px; border: none; border-radius: 10px;
   background: #534AB7; color: #fff;
-  font-size: 14px; font-weight: 600;
-  cursor: pointer;
+  font-size: 14px; font-weight: 600; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: background 0.15s;
 }
 .btn-play:hover { background: #3C3489; }
+.btn-play:disabled { background: #b0acdc; cursor: not-allowed; }
 .btn-stop {
-  padding: 13px 18px;
-  border: 1.5px solid #E24B4A;
+  padding: 13px 18px; border: 1.5px solid #E24B4A;
   border-radius: 10px; background: #fff;
-  color: #E24B4A; font-size: 14px;
-  cursor: pointer;
+  color: #E24B4A; font-size: 14px; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 6px;
   transition: background 0.15s;
 }
 .btn-stop:hover { background: #fff0f0; }
 .status-bar {
-  margin-top: 12px;
-  font-size: 12px; color: #999;
+  margin-top: 12px; font-size: 12px; color: #999;
   text-align: center; min-height: 16px;
 }
 .wave { display: inline-flex; gap: 2px; align-items: center; vertical-align: middle; }
@@ -139,10 +118,7 @@ select {
 }
 .wave span:nth-child(2) { animation-delay: 0.15s; }
 .wave span:nth-child(3) { animation-delay: 0.3s; }
-@keyframes wave {
-  0%, 100% { height: 4px; }
-  50% { height: 14px; }
-}
+@keyframes wave { 0%,100% { height: 4px; } 50% { height: 14px; } }
 </style>
 </head>
 <body>
@@ -159,12 +135,22 @@ select {
     <h2>Ovoz studiyasi</h2>
   </div>
 
+  <!-- Azure API sozlamalari -->
+  <div class="api-box">
+    <label>Azure API Key</label>
+    <input type="password" id="apiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+    <label>Region</label>
+    <input type="text" id="region" placeholder="eastus" value="eastus">
+  </div>
+
+  <!-- Til tanlash -->
   <div class="lang-tabs">
     <button class="lang-tab active" onclick="setLang('uz', this)">O'zbek</button>
     <button class="lang-tab" onclick="setLang('ru', this)">Русский</button>
     <button class="lang-tab" onclick="setLang('en', this)">English</button>
   </div>
 
+  <!-- Jins tanlash -->
   <div class="gender-row">
     <button class="gender-btn active" id="btn-female" onclick="setGender('female')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -182,18 +168,15 @@ select {
     </button>
   </div>
 
+  <!-- Matn -->
   <div class="textarea-wrap">
     <textarea id="textInput" placeholder="Matn kiriting..." oninput="updateCount()"></textarea>
     <span class="char-count" id="charCount">0</span>
   </div>
 
-  <div class="voice-row">
-    <span class="voice-label">Ovoz:</span>
-    <select id="voiceSelect"></select>
-  </div>
-
+  <!-- Tugmalar -->
   <div class="action-row">
-    <button class="btn-play" onclick="gapir()">
+    <button class="btn-play" id="btnPlay" onclick="gapir()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
       O'qib ber
     </button>
@@ -206,86 +189,109 @@ select {
 </div>
 
 <script>
-let allVoices = [];
 let currentLang = 'uz';
 let currentGender = 'female';
+let currentAudio = null;
 
-const langMap = {
-  uz: ['uz', 'uz-UZ'],
-  ru: ['ru', 'ru-RU'],
-  en: ['en', 'en-US', 'en-GB', 'en-AU']
+// Azure ovoz nomlari
+const voices = {
+  uz: { female: 'uz-UZ-MadinaNeural', male: 'uz-UZ-SardorNeural' },
+  ru: { female: 'ru-RU-SvetlanaNeural', male: 'ru-RU-DmitryNeural' },
+  en: { female: 'en-US-JennyNeural', male: 'en-US-GuyNeural' }
 };
 
-const femaleWords = ['female','woman','girl','zira','hazel','aria','jenny','salli','joanna','kendra','ivy','emma','olivia','alice','samantha','victoria','karen'];
-const maleWords = ['male','man','guy','david','mark','ryan','brian','joey','matthew','justin','daniel','james','oliver','thomas'];
-
-function loadVoices() {
-  allVoices = speechSynthesis.getVoices();
-  populateVoices();
-}
-
-function populateVoices() {
-  const sel = document.getElementById('voiceSelect');
-  sel.innerHTML = '';
-  const langs = langMap[currentLang];
-  let filtered = allVoices.filter(v => langs.some(l => v.lang.startsWith(l)));
-  if (!filtered.length) filtered = allVoices.filter(v => v.lang.startsWith(currentLang));
-  if (!filtered.length) filtered = allVoices;
-
-  const keywords = currentGender === 'female' ? femaleWords : maleWords;
-  let gFiltered = filtered.filter(v => keywords.some(k => v.name.toLowerCase().includes(k)));
-  const toShow = gFiltered.length ? gFiltered : filtered;
-
-  toShow.forEach(v => {
-    const opt = document.createElement('option');
-    opt.value = allVoices.indexOf(v);
-    opt.text = v.name;
-    sel.appendChild(opt);
-  });
-
-  document.getElementById('statusBar').textContent = toShow.length ? '' : 'Bu til uchun ovoz topilmadi';
-}
+const langCode = { uz: 'uz-UZ', ru: 'ru-RU', en: 'en-US' };
 
 function setLang(lang, el) {
   currentLang = lang;
   document.querySelectorAll('.lang-tab').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-  populateVoices();
 }
 
 function setGender(g) {
   currentGender = g;
   document.getElementById('btn-female').classList.toggle('active', g === 'female');
   document.getElementById('btn-male').classList.toggle('active', g === 'male');
-  populateVoices();
 }
 
 function updateCount() {
   document.getElementById('charCount').textContent = document.getElementById('textInput').value.length;
 }
 
-function gapir() {
+async function gapir() {
   const text = document.getElementById('textInput').value.trim();
-  if (!text) { document.getElementById('statusBar').textContent = 'Iltimos, matn kiriting'; return; }
-  speechSynthesis.cancel();
-  const voiceIdx = document.getElementById('voiceSelect').value;
-  const utt = new SpeechSynthesisUtterance(text);
-  if (voiceIdx !== '' && allVoices[voiceIdx]) utt.voice = allVoices[voiceIdx];
-  utt.rate = 0.95;
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const region = document.getElementById('region').value.trim() || 'eastus';
   const statusEl = document.getElementById('statusBar');
-  statusEl.innerHTML = '<span class="wave"><span></span><span></span><span></span></span> O\'qilmoqda...';
-  utt.onend = () => { statusEl.textContent = 'Tugadi ✓'; };
-  utt.onerror = () => { statusEl.textContent = 'Xatolik yuz berdi'; };
-  speechSynthesis.speak(utt);
+  const btn = document.getElementById('btnPlay');
+
+  if (!text) { statusEl.textContent = 'Iltimos, matn kiriting'; return; }
+  if (!apiKey) { statusEl.textContent = 'Iltimos, Azure API kalitini kiriting'; return; }
+
+  toxta();
+  btn.disabled = true;
+  statusEl.innerHTML = '<span class="wave"><span></span><span></span><span></span></span> Tayyorlanmoqda...';
+
+  const voiceName = voices[currentLang][currentGender];
+  const lang = langCode[currentLang];
+
+  const ssml = `
+    <speak version='1.0' xml:lang='${lang}'>
+      <voice xml:lang='${lang}' name='${voiceName}'>
+        ${text}
+      </voice>
+    </speak>`;
+
+  try {
+    const res = await fetch(
+      `https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`,
+      {
+        method: 'POST',
+        headers: {
+          'Ocp-Apim-Subscription-Key': apiKey,
+          'Content-Type': 'application/ssml+xml',
+          'X-Microsoft-OutputFormat': 'audio-16khz-128kbitrate-mono-mp3'
+        },
+        body: ssml
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.text();
+      statusEl.textContent = 'Xatolik: ' + (res.status === 401 ? 'API kalit noto\'g\'ri' : res.status);
+      btn.disabled = false;
+      return;
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+    statusEl.innerHTML = '<span class="wave"><span></span><span></span><span></span></span> O\'qilmoqda...';
+    currentAudio.play();
+    currentAudio.onended = () => {
+      statusEl.textContent = 'Tugadi ✓';
+      btn.disabled = false;
+      URL.revokeObjectURL(url);
+    };
+    currentAudio.onerror = () => {
+      statusEl.textContent = 'Audio xatolik';
+      btn.disabled = false;
+    };
+  } catch (e) {
+    statusEl.textContent = 'Ulanish xatoligi: ' + e.message;
+    btn.disabled = false;
+  }
 }
 
 function toxta() {
-  speechSynthesis.cancel();
-  document.getElementById('statusBar').textContent = 'To\'xtatildi';
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  document.getElementById('statusBar').textContent = '';
+  document.getElementById('btnPlay').disabled = false;
 }
-
-speechSynthesis.onvoiceschanged = loadVoices;
-loadVoices();
 </script>
 </body>
 </html>
