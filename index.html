@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Oson TTS</title>
+</head>
+<body>
+
+<h2>🎤 Matnni ovozga aylantirish</h2>
+
+<textarea id="text" rows="5" cols="40" placeholder="Matn yozing..."></textarea>
+
+<br><br>
+
+<button onclick="gapir()">▶ O‘qib ber</button> <button onclick="toxta()">■ To‘xtat</button>
+
+<script>
+function gapir() {
+  let matn = document.getElementById("text").value;
+
+  let ovoz = new SpeechSynthesisUtterance(matn);
+  ovoz.lang = "uz-UZ";
+
+  speechSynthesis.speak(ovoz);
+}
+
+function toxta() {
+  speechSynthesis.cancel();
+}
+</script>
+
+</body>
+</html>
