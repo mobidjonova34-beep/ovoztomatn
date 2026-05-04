@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Uzbek TTS Studio (Azure)</title>
+<title>Ovoz studiyasi (API siz PRO)</title>
 <style>
 body {
   font-family: Arial;
@@ -25,105 +25,74 @@ textarea {
   margin-top: 10px;
   padding: 10px;
 }
-button {
+select, button {
   margin-top: 10px;
-  padding: 12px;
+  padding: 10px;
   width: 100%;
-  border: none;
-  background: #5a54d6;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
 }
-button:hover { background: #3f3ab3; }
-.stop { background: #e74c3c; }
 </style>
 </head>
 
 <body>
 
 <div class="card">
-<h3>🎤 Uzbek TTS Studio</h3>
+<h3>🎤 Ovoz studiyasi (API siz)</h3>
 
-<input type="password" id="apiKey" placeholder="Azure API Key"><br><br>
-<input type="text" id="region" value="westeurope" placeholder="Region"><br>
+<select id="voiceSelect"></select>
 
-<textarea id="text">Assalomu alaykum, bu tabiiy o'zbek ovoz sinovi.</textarea>
+<textarea id="text">Assalomu alaykum, bu yaxshilangan bepul ovoz.</textarea>
 
 <button onclick="speak()">▶ O'qib ber</button>
-<button class="stop" onclick="stopAudio()">⛔ To'xtat</button>
+<button onclick="stop()">⛔ To'xtat</button>
 
 <p id="status"></p>
 </div>
 
 <script>
-let audio = null;
+let synth = window.speechSynthesis;
+let voices = [];
 
-async function speak() {
-  const text = document.getElementById("text").value.trim();
-  const key = document.getElementById("apiKey").value.trim();
-  const region = document.getElementById("region").value.trim();
+function loadVoices() {
+  voices = synth.getVoices();
+  const select = document.getElementById("voiceSelect");
+  select.innerHTML = "";
 
-  const status = document.getElementById("status");
-
-  if (!text) return status.innerText = "Matn kiriting";
-  if (!key) return status.innerText = "API key kiriting";
-
-  stopAudio();
-  status.innerText = "Yuklanmoqda...";
-
-  const ssml = `
-  <speak version='1.0' xml:lang='uz-UZ'>
-    <voice name='uz-UZ-SardorNeural'>
-      <prosody rate="-10%" pitch="0%">
-        ${text}
-      </prosody>
-    </voice>
-  </speak>`;
-
-  try {
-    const res = await fetch(
-      `https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`,
-      {
-        method: "POST",
-        headers: {
-          "Ocp-Apim-Subscription-Key": key,
-          "Content-Type": "application/ssml+xml",
-          "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3"
-        },
-        body: ssml
-      }
-    );
-
-    if (!res.ok) {
-      status.innerText = "Xatolik: API yoki region noto'g'ri";
-      return;
+  // faqat yaxshi ovozlarni chiqaramiz
+  voices.forEach((v, i) => {
+    if (v.lang.includes("en") || v.lang.includes("ru") || v.lang.includes("tr")) {
+      let option = document.createElement("option");
+      option.value = i;
+      option.text = v.name + " (" + v.lang + ")";
+      select.appendChild(option);
     }
-
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-
-    audio = new Audio(url);
-    audio.play();
-
-    status.innerText = "O'qilmoqda...";
-
-    audio.onended = () => {
-      status.innerText = "Tugadi";
-      URL.revokeObjectURL(url);
-    };
-
-  } catch (e) {
-    status.innerText = "Internet yoki API xatolik";
-  }
+  });
 }
 
-function stopAudio() {
-  if (audio) {
-    audio.pause();
-    audio.currentTime = 0;
-    audio = null;
-  }
+speechSynthesis.onvoiceschanged = loadVoices;
+
+function speak() {
+  const text = document.getElementById("text").value;
+  const index = document.getElementById("voiceSelect").value;
+  const status = document.getElementById("status");
+
+  stop();
+
+  let utter = new SpeechSynthesisUtterance(text);
+  utter.voice = voices[index];
+
+  // tabiiyroq qilish
+  utter.rate = 0.85;
+  utter.pitch = 1;
+  utter.volume = 1;
+
+  synth.speak(utter);
+
+  status.innerText = "O'qilmoqda...";
+  utter.onend = () => status.innerText = "Tugadi";
+}
+
+function stop() {
+  synth.cancel();
 }
 </script>
 
