@@ -5,68 +5,79 @@
 <title>Ovoz studiyasi</title>
 
 <style>
+* { box-sizing: border-box; }
+
 body {
-  font-family: Arial;
-  background: #efedff;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #eae7ff, #f6f5ff);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
+
 .card {
-  background: white;
-  width: 420px;
-  padding: 20px;
+  background: #fff;
+  padding: 25px;
   border-radius: 20px;
+  width: 380px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
-h2 { margin-bottom: 15px; }
+
+h2 {
+  margin-bottom: 15px;
+}
 
 .tabs, .gender {
   display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
+
 .tabs button, .gender button {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #eee;
   cursor: pointer;
+  transition: 0.2s;
 }
-.active {
+
+.tabs button.active, .gender button.active {
   background: #5a54d6;
   color: white;
 }
 
 textarea {
   width: 100%;
-  height: 100px;
-  padding: 10px;
-  border-radius: 10px;
+  height: 110px;
+  padding: 12px;
+  border-radius: 12px;
   border: 1px solid #ddd;
-  margin-top: 10px;
+  resize: none;
 }
 
 button.play {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 12px;
   border: none;
   background: #5a54d6;
   color: white;
-  border-radius: 10px;
+  border-radius: 12px;
+  font-weight: bold;
 }
 
 button.stop {
   width: 100%;
-  margin-top: 5px;
+  margin-top: 6px;
   padding: 12px;
   border: none;
   background: #ff4d4d;
   color: white;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 </style>
 </head>
@@ -87,20 +98,18 @@ button.stop {
   <button onclick="setGender('male', this)">Erkak</button>
 </div>
 
-<textarea id="text">Assalomu alaykum, bu chiroyli bepul ovoz.</textarea>
+<textarea id="text">Assalomu alaykum, bu chiroyli ovoz.</textarea>
 
 <button class="play" onclick="speak()">▶ O'qib ber</button>
 <button class="stop" onclick="stop()">⛔ To'xtat</button>
 
 <p id="status"></p>
-
 </div>
 
 <script>
 let synth = speechSynthesis;
 let currentLang = "uz";
 let currentGender = "female";
-let utter;
 
 function setLang(lang, el) {
   currentLang = lang;
@@ -114,8 +123,8 @@ function setGender(g, el) {
   el.classList.add("active");
 }
 
-function getBestVoice() {
-  const voices = synth.getVoices();
+function getVoice() {
+  let voices = synth.getVoices();
 
   let langMap = {
     uz: ["uz", "tr", "ru"],
@@ -123,129 +132,31 @@ function getBestVoice() {
     en: ["en"]
   };
 
-  let candidates = voices.filter(v =>
+  let filtered = voices.filter(v =>
     langMap[currentLang].some(l => v.lang.toLowerCase().includes(l))
   );
 
-  if (candidates.length === 0) return voices[0];
-
-  // jinsga yaqin ovoz tanlash (nomidan)
-  let genderVoice = candidates.find(v =>
-    currentGender === "female"
-      ? v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("irina")
-      : v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david")
-  );
-
-  return genderVoice || candidates[0];
+  return filtered[0] || voices[0];
 }
 
 function speak() {
-  const text = document.getElementById("text").value;
-  const status = document.getElementById("status");
-
-  stop();
-
-  utter = new SpeechSynthesisUtterance(text);
-  utter.voice = getBestVoice();
-
-  utter.rate = 0.9;
-  utter.pitch = 1;
-
-  synth.speak(utter);
-
-  status.innerText = "O'qilmoqda...";
-  utter.onend = () => status.innerText = "Tugadi";
-}
-
-function stop() {
-  synth.cancel();
-  document.getElementById("status").innerText = "";
-}
-</script>
-
-</body>
-</html>
-.card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  width: 420px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-textarea {
-  width: 100%;
-  height: 120px;
-  margin-top: 10px;
-  padding: 10px;
-}
-select, button {
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-<h3>🎤 Ovoz studiyasi (API siz)</h3>
-
-<select id="voiceSelect"></select>
-
-<textarea id="text">Assalomu alaykum, bu yaxshilangan bepul ovoz.</textarea>
-
-<button onclick="speak()">▶ O'qib ber</button>
-<button onclick="stop()">⛔ To'xtat</button>
-
-<p id="status"></p>
-</div>
-
-<script>
-let synth = window.speechSynthesis;
-let voices = [];
-
-function loadVoices() {
-  voices = synth.getVoices();
-  const select = document.getElementById("voiceSelect");
-  select.innerHTML = "";
-
-  // faqat yaxshi ovozlarni chiqaramiz
-  voices.forEach((v, i) => {
-    if (v.lang.includes("en") || v.lang.includes("ru") || v.lang.includes("tr")) {
-      let option = document.createElement("option");
-      option.value = i;
-      option.text = v.name + " (" + v.lang + ")";
-      select.appendChild(option);
-    }
-  });
-}
-
-speechSynthesis.onvoiceschanged = loadVoices;
-
-function speak() {
-  const text = document.getElementById("text").value;
-  const index = document.getElementById("voiceSelect").value;
-  const status = document.getElementById("status");
-
-  stop();
+  let text = document.getElementById("text").value;
+  let status = document.getElementById("status");
 
   let utter = new SpeechSynthesisUtterance(text);
-  utter.voice = voices[index];
+  utter.voice = getVoice();
+  utter.rate = 0.9;
 
-  // tabiiyroq qilish
-  utter.rate = 0.85;
-  utter.pitch = 1;
-  utter.volume = 1;
-
-  synth.speak(utter);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
 
   status.innerText = "O'qilmoqda...";
   utter.onend = () => status.innerText = "Tugadi";
 }
 
 function stop() {
-  synth.cancel();
+  speechSynthesis.cancel();
+  document.getElementById("status").innerText = "";
 }
 </script>
 
