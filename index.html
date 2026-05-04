@@ -2,296 +2,130 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Ovoz Studiyasi - Azure TTS</title>
+<title>Uzbek TTS Studio (Azure)</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: Arial, sans-serif;
-  background: #f0eeff;
+  font-family: Arial;
+  background: #f3f1ff;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
 }
 .card {
   background: #fff;
-  border-radius: 20px;
-  padding: 2rem;
-  width: 460px;
-  box-shadow: 0 4px 24px rgba(83,74,183,0.10);
+  padding: 20px;
+  border-radius: 15px;
+  width: 420px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
-.header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 1.5rem;
-}
-.mic-circle {
-  width: 38px; height: 38px;
-  background: #EEEDFE; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-h2 { font-size: 18px; font-weight: 600; color: #2d2b55; }
-
-.lang-tabs {
-  display: flex; gap: 6px;
-  background: #f4f3ff; border-radius: 10px;
-  padding: 4px; margin-bottom: 1rem;
-}
-.lang-tab {
-  flex: 1; padding: 8px 0;
-  border: none; border-radius: 7px;
-  background: transparent; font-size: 13px; color: #888;
-  cursor: pointer; transition: all 0.15s;
-}
-.lang-tab.active {
-  background: #fff; color: #534AB7; font-weight: 600;
-  box-shadow: 0 1px 4px rgba(83,74,183,0.12);
-}
-
-.gender-row { display: flex; gap: 8px; margin-bottom: 1rem; }
-.gender-btn {
-  flex: 1; padding: 10px;
-  border: 1.5px solid #e8e6f8; border-radius: 10px;
-  background: #fff; font-size: 13px; color: #888;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  transition: all 0.15s;
-}
-.gender-btn.active {
-  border-color: #534AB7; background: #EEEDFE;
-  color: #534AB7; font-weight: 600;
-}
-
-.api-box {
-  background: #faf9ff; border: 1.5px solid #e8e6f8;
-  border-radius: 10px; padding: 12px; margin-bottom: 1rem;
-}
-.api-box label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
-.api-box input {
-  width: 100%; border: 1px solid #e0ddf5; border-radius: 7px;
-  padding: 7px 10px; font-size: 13px; color: #333;
-  background: #fff; outline: none; margin-bottom: 6px;
-}
-.api-box input:last-child { margin-bottom: 0; }
-
-.textarea-wrap { position: relative; margin-bottom: 1rem; }
 textarea {
-  width: 100%; height: 120px;
-  padding: 12px 14px; border: 1.5px solid #e8e6f8;
-  border-radius: 10px; background: #faf9ff;
-  font-size: 14px; color: #333; resize: none;
-  font-family: inherit; outline: none; transition: border-color 0.15s;
-  line-height: 1.6;
+  width: 100%;
+  height: 120px;
+  margin-top: 10px;
+  padding: 10px;
 }
-textarea:focus { border-color: #7F77DD; background: #fff; }
-.char-count {
-  position: absolute; bottom: 8px; right: 10px;
-  font-size: 11px; color: #bbb;
+button {
+  margin-top: 10px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  background: #5a54d6;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
 }
-
-.action-row { display: flex; gap: 8px; }
-.btn-play {
-  flex: 1; padding: 13px; border: none; border-radius: 10px;
-  background: #534AB7; color: #fff;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: background 0.15s;
-}
-.btn-play:hover { background: #3C3489; }
-.btn-play:disabled { background: #b0acdc; cursor: not-allowed; }
-.btn-stop {
-  padding: 13px 18px; border: 1.5px solid #E24B4A;
-  border-radius: 10px; background: #fff;
-  color: #E24B4A; font-size: 14px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  transition: background 0.15s;
-}
-.btn-stop:hover { background: #fff0f0; }
-.status-bar {
-  margin-top: 12px; font-size: 12px; color: #999;
-  text-align: center; min-height: 16px;
-}
-.wave { display: inline-flex; gap: 2px; align-items: center; vertical-align: middle; }
-.wave span {
-  display: inline-block; width: 3px; height: 10px;
-  background: #534AB7; border-radius: 2px;
-  animation: wave 0.8s ease-in-out infinite;
-}
-.wave span:nth-child(2) { animation-delay: 0.15s; }
-.wave span:nth-child(3) { animation-delay: 0.3s; }
-@keyframes wave { 0%,100% { height: 4px; } 50% { height: 14px; } }
+button:hover { background: #3f3ab3; }
+.stop { background: #e74c3c; }
 </style>
 </head>
+
 <body>
+
 <div class="card">
-  <div class="header">
-    <div class="mic-circle">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <rect x="9" y="2" width="6" height="12" rx="3" fill="#534AB7"/>
-        <path d="M5 10a7 7 0 0014 0" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="12" y1="21" x2="12" y2="17" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="9" y1="21" x2="15" y2="21" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <h2>Ovoz studiyasi</h2>
-  </div>
+<h3>🎤 Uzbek TTS Studio</h3>
 
-  <!-- Azure API sozlamalari -->
-  <div class="api-box">
-    <label>Azure API Key</label>
-    <input type="password" id="apiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-    <label>Region</label>
-    <input type="text" id="region" placeholder="eastus" value="eastus">
-  </div>
+<input type="password" id="apiKey" placeholder="Azure API Key"><br><br>
+<input type="text" id="region" value="westeurope" placeholder="Region"><br>
 
-  <!-- Til tanlash -->
-  <div class="lang-tabs">
-    <button class="lang-tab active" onclick="setLang('uz', this)">O'zbek</button>
-    <button class="lang-tab" onclick="setLang('ru', this)">Русский</button>
-    <button class="lang-tab" onclick="setLang('en', this)">English</button>
-  </div>
+<textarea id="text">Assalomu alaykum, bu tabiiy o'zbek ovoz sinovi.</textarea>
 
-  <!-- Jins tanlash -->
-  <div class="gender-row">
-    <button class="gender-btn active" id="btn-female" onclick="setGender('female')">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="8" r="4" fill="#534AB7"/>
-        <path d="M12 12v8M9 17h6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      Ayol ovozi
-    </button>
-    <button class="gender-btn" id="btn-male" onclick="setGender('male')">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <circle cx="10" cy="14" r="4" fill="#7F77DD"/>
-        <path d="M14 10l4-4M18 6h-4M18 6v4" stroke="#7F77DD" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      Erkak ovozi
-    </button>
-  </div>
+<button onclick="speak()">▶ O'qib ber</button>
+<button class="stop" onclick="stopAudio()">⛔ To'xtat</button>
 
-  <!-- Matn -->
-  <div class="textarea-wrap">
-    <textarea id="textInput" placeholder="Matn kiriting..." oninput="updateCount()"></textarea>
-    <span class="char-count" id="charCount">0</span>
-  </div>
-
-  <!-- Tugmalar -->
-  <div class="action-row">
-    <button class="btn-play" id="btnPlay" onclick="gapir()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-      O'qib ber
-    </button>
-    <button class="btn-stop" onclick="toxta()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="#E24B4A"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-      To'xtat
-    </button>
-  </div>
-  <div class="status-bar" id="statusBar"></div>
+<p id="status"></p>
 </div>
 
 <script>
-let currentLang = 'uz';
-let currentGender = 'female';
-let currentAudio = null;
+let audio = null;
 
-// Azure ovoz nomlari
-const voices = {
-  uz: { female: 'uz-UZ-MadinaNeural', male: 'uz-UZ-SardorNeural' },
-  ru: { female: 'ru-RU-SvetlanaNeural', male: 'ru-RU-DmitryNeural' },
-  en: { female: 'en-US-JennyNeural', male: 'en-US-GuyNeural' }
-};
+async function speak() {
+  const text = document.getElementById("text").value.trim();
+  const key = document.getElementById("apiKey").value.trim();
+  const region = document.getElementById("region").value.trim();
 
-const langCode = { uz: 'uz-UZ', ru: 'ru-RU', en: 'en-US' };
+  const status = document.getElementById("status");
 
-function setLang(lang, el) {
-  currentLang = lang;
-  document.querySelectorAll('.lang-tab').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-}
+  if (!text) return status.innerText = "Matn kiriting";
+  if (!key) return status.innerText = "API key kiriting";
 
-function setGender(g) {
-  currentGender = g;
-  document.getElementById('btn-female').classList.toggle('active', g === 'female');
-  document.getElementById('btn-male').classList.toggle('active', g === 'male');
-}
-
-function updateCount() {
-  document.getElementById('charCount').textContent = document.getElementById('textInput').value.length;
-}
-
-async function gapir() {
-  const text = document.getElementById('textInput').value.trim();
-  const apiKey = document.getElementById('apiKey').value.trim();
-  const region = document.getElementById('region').value.trim() || 'eastus';
-  const statusEl = document.getElementById('statusBar');
-  const btn = document.getElementById('btnPlay');
-
-  if (!text) { statusEl.textContent = 'Iltimos, matn kiriting'; return; }
-  if (!apiKey) { statusEl.textContent = 'Iltimos, Azure API kalitini kiriting'; return; }
-
-  toxta();
-  btn.disabled = true;
-  statusEl.innerHTML = '<span class="wave"><span></span><span></span><span></span></span> Tayyorlanmoqda...';
-
-  const voiceName = voices[currentLang][currentGender];
-  const lang = langCode[currentLang];
+  stopAudio();
+  status.innerText = "Yuklanmoqda...";
 
   const ssml = `
-    <speak version='1.0' xml:lang='${lang}'>
-      <voice xml:lang='${lang}' name='${voiceName}'>
+  <speak version='1.0' xml:lang='uz-UZ'>
+    <voice name='uz-UZ-SardorNeural'>
+      <prosody rate="-10%" pitch="0%">
         ${text}
-      </voice>
-    </speak>`;
+      </prosody>
+    </voice>
+  </speak>`;
 
   try {
     const res = await fetch(
       `https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Ocp-Apim-Subscription-Key': apiKey,
-          'Content-Type': 'application/ssml+xml',
-          'X-Microsoft-OutputFormat': 'audio-16khz-128kbitrate-mono-mp3'
+          "Ocp-Apim-Subscription-Key": key,
+          "Content-Type": "application/ssml+xml",
+          "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3"
         },
         body: ssml
       }
     );
 
     if (!res.ok) {
-      const err = await res.text();
-      statusEl.textContent = 'Xatolik: ' + (res.status === 401 ? 'API kalit noto\'g\'ri' : res.status);
-      btn.disabled = false;
+      status.innerText = "Xatolik: API yoki region noto'g'ri";
       return;
     }
 
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
-    currentAudio = new Audio(url);
-    statusEl.innerHTML = '<span class="wave"><span></span><span></span><span></span></span> O\'qilmoqda...';
-    currentAudio.play();
-    currentAudio.onended = () => {
-      statusEl.textContent = 'Tugadi ✓';
-      btn.disabled = false;
+
+    audio = new Audio(url);
+    audio.play();
+
+    status.innerText = "O'qilmoqda...";
+
+    audio.onended = () => {
+      status.innerText = "Tugadi";
       URL.revokeObjectURL(url);
     };
-    currentAudio.onerror = () => {
-      statusEl.textContent = 'Audio xatolik';
-      btn.disabled = false;
-    };
+
   } catch (e) {
-    statusEl.textContent = 'Ulanish xatoligi: ' + e.message;
-    btn.disabled = false;
+    status.innerText = "Internet yoki API xatolik";
   }
 }
 
-function toxta() {
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-    currentAudio = null;
+function stopAudio() {
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+    audio = null;
   }
-  document.getElementById('statusBar').textContent = '';
-  document.getElementById('btnPlay').disabled = false;
 }
 </script>
+
 </body>
 </html>
