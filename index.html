@@ -2,82 +2,58 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<title>Ovoz studiyasi</title>
+<title>Ovoz studiyasi PRO</title>
 
 <style>
-* { box-sizing: border-box; }
-
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #eae7ff, #f6f5ff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  margin:0;
+  font-family: Arial;
+  background: linear-gradient(135deg,#ece9ff,#f7f6ff);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
-
 .card {
-  background: #fff;
-  padding: 25px;
-  border-radius: 20px;
-  width: 380px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  background:#fff;
+  padding:25px;
+  border-radius:20px;
+  width:380px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
-
-h2 {
-  margin-bottom: 15px;
+.tabs,.gender {
+  display:flex;
+  gap:8px;
+  margin-bottom:10px;
 }
-
-.tabs, .gender {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
+button {
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#eee;
 }
-
-.tabs button, .gender button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #eee;
-  cursor: pointer;
-  transition: 0.2s;
+button.active {
+  background:#5a54d6;
+  color:#fff;
 }
-
-.tabs button.active, .gender button.active {
-  background: #5a54d6;
-  color: white;
-}
-
 textarea {
-  width: 100%;
-  height: 110px;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  resize: none;
+  width:100%;
+  height:110px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
 }
-
-button.play {
-  width: 100%;
-  margin-top: 12px;
-  padding: 12px;
-  border: none;
-  background: #5a54d6;
-  color: white;
-  border-radius: 12px;
-  font-weight: bold;
+.play {
+  background:#5a54d6;
+  color:#fff;
+  margin-top:10px;
 }
-
-button.stop {
-  width: 100%;
-  margin-top: 6px;
-  padding: 12px;
-  border: none;
-  background: #ff4d4d;
-  color: white;
-  border-radius: 12px;
+.stop {
+  background:#ff4d4d;
+  color:#fff;
+  margin-top:5px;
 }
 </style>
 </head>
@@ -88,14 +64,14 @@ button.stop {
 <h2>🎤 Ovoz studiyasi</h2>
 
 <div class="tabs">
-  <button class="active" onclick="setLang('uz', this)">O'zbek</button>
-  <button onclick="setLang('ru', this)">Русский</button>
-  <button onclick="setLang('en', this)">English</button>
+<button class="active" onclick="setLang('uz',this)">O'zbek</button>
+<button onclick="setLang('ru',this)">Русский</button>
+<button onclick="setLang('en',this)">English</button>
 </div>
 
 <div class="gender">
-  <button class="active" onclick="setGender('female', this)">Ayol</button>
-  <button onclick="setGender('male', this)">Erkak</button>
+<button class="active" onclick="setGender('female',this)">Ayol</button>
+<button onclick="setGender('male',this)">Erkak</button>
 </div>
 
 <textarea id="text">Assalomu alaykum, bu chiroyli ovoz.</textarea>
@@ -111,52 +87,71 @@ let synth = speechSynthesis;
 let currentLang = "uz";
 let currentGender = "female";
 
-function setLang(lang, el) {
-  currentLang = lang;
+// til va jins tanlash
+function setLang(lang,el){
+  currentLang=lang;
   document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
   el.classList.add("active");
 }
-
-function setGender(g, el) {
-  currentGender = g;
+function setGender(g,el){
+  currentGender=g;
   document.querySelectorAll(".gender button").forEach(b=>b.classList.remove("active"));
   el.classList.add("active");
 }
 
-function getVoice() {
+// eng yaxshi ovozni tanlash
+function getVoice(){
   let voices = synth.getVoices();
 
-  let langMap = {
-    uz: ["uz", "tr", "ru"],
-    ru: ["ru"],
-    en: ["en"]
-  };
+  let priority = [
+    "Google UK English Female",
+    "Google US English",
+    "Microsoft Zira",
+    "Microsoft David",
+    "Microsoft Irina"
+  ];
 
-  let filtered = voices.filter(v =>
-    langMap[currentLang].some(l => v.lang.toLowerCase().includes(l))
-  );
+  for(let p of priority){
+    let v = voices.find(v=>v.name.includes(p));
+    if(v) return v;
+  }
 
-  return filtered[0] || voices[0];
+  return voices[0];
 }
 
-function speak() {
+// matnni yaxshilash (MUHIM!)
+function cleanText(text){
+  return text
+    .replace(/,/g, ", ")
+    .replace(/\./g, ". ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// gapirtirish
+function speak(){
   let text = document.getElementById("text").value;
   let status = document.getElementById("status");
 
+  text = cleanText(text);
+
   let utter = new SpeechSynthesisUtterance(text);
   utter.voice = getVoice();
-  utter.rate = 0.9;
 
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
+  utter.rate = 0.85;
+  utter.pitch = 1;
 
-  status.innerText = "O'qilmoqda...";
-  utter.onend = () => status.innerText = "Tugadi";
+  synth.cancel();
+  synth.speak(utter);
+
+  status.innerText="O'qilmoqda...";
+  utter.onend=()=>status.innerText="Tugadi";
 }
 
-function stop() {
-  speechSynthesis.cancel();
-  document.getElementById("status").innerText = "";
+// to'xtatish
+function stop(){
+  synth.cancel();
+  document.getElementById("status").innerText="";
 }
 </script>
 
